@@ -383,18 +383,54 @@ function goTo(i) {
   updProg();
 }
 
+let isScrolling = false;
+
 function setupSwipe() {
   const f = document.getElementById('feed');
+
+  // Touch swipe
   f.addEventListener('touchstart', e => { ty = e.touches[0].clientY; }, { passive: true });
   f.addEventListener('touchend', e => {
     const d = ty - e.changedTouches[0].clientY;
-    if (Math.abs(d) > 50) { d > 0 ? nxt() : prv(); }
-  });
-  f.addEventListener('wheel', e => { if (e.deltaY > 30) nxt(); else if (e.deltaY < -30) prv(); }, { passive: true });
+    if (Math.abs(d) > 80) { d > 0 ? nxt() : prv(); }
+  }, { passive: true });
+
+  // Mouse wheel — debounce ketat agar tidak loncat banyak
+  let wheelAccum = 0;
+  let wheelTimer = null;
+  f.addEventListener('wheel', e => {
+    e.preventDefault();
+    wheelAccum += e.deltaY;
+    clearTimeout(wheelTimer);
+    wheelTimer = setTimeout(() => {
+      if (Math.abs(wheelAccum) > 150) {
+        wheelAccum > 0 ? nxt() : prv();
+      }
+      wheelAccum = 0;
+    }, 80);
+  }, { passive: false });
 }
 
-function nxt() { if (idx < videos.length - 1) { idx++; goTo(idx); } else { toast('🎉 Semua video sudah ditonton!'); } }
-function prv() { if (idx > 0) { idx--; goTo(idx); } }
+function nxt() {
+  if (isScrolling) return;
+  if (idx < videos.length - 1) {
+    isScrolling = true;
+    idx++;
+    goTo(idx);
+    setTimeout(() => { isScrolling = false; }, 600);
+  } else {
+    toast('🎉 Semua video sudah ditonton!');
+  }
+}
+function prv() {
+  if (isScrolling) return;
+  if (idx > 0) {
+    isScrolling = true;
+    idx--;
+    goTo(idx);
+    setTimeout(() => { isScrolling = false; }, 600);
+  }
+}
 
 window.stab = tab => {
   ['nHome', 'nLb', 'nProf'].forEach(id => document.getElementById(id).classList.remove('on'));
