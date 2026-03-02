@@ -7,22 +7,21 @@
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{--bg:#080c14;--sur:#111827;--sur2:#1a2438;--red:#e94560;--grn:#00d4aa;--gld:#f5a623;--txt:#f0f4ff;--mut:#6b7a99;--nav:65px;}
-body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--txt);width:100%;height:100dvh;overflow:hidden;}
+:root{--bg:#080c14;--sur:#111827;--sur2:#1a2438;--red:#e94560;--grn:#00d4aa;--gld:#f5a623;--txt:#f0f4ff;--mut:#6b7a99;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--txt);overflow:hidden;width:100vw;height:100vh;}
 
-/* ── LOADING ── */
-#loadingScreen{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;}
+/* LOADING */
+#loadingScreen{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;}
 .spin{width:44px;height:44px;border:3px solid rgba(255,255,255,.1);border-top-color:var(--red);border-radius:50%;animation:sp .8s linear infinite;margin-bottom:14px;}
 @keyframes sp{to{transform:rotate(360deg)}}
 
-/* ── LOGIN ── */
-#loginScreen{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:radial-gradient(ellipse at 20% 20%,#1a0a2e,#080c14 50%,#001a2e);z-index:100;}
-#loginScreen.active{display:flex;}
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;background:radial-gradient(ellipse at 20% 20%,#1a0a2e,#080c14 50%,#001a2e);display:none;align-items:center;justify-content:center;z-index:100;}
 .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.22;pointer-events:none;}
 .o1{width:480px;height:480px;background:#e94560;top:-140px;left:-140px;animation:ob 9s ease-in-out infinite;}
 .o2{width:380px;height:380px;background:#00d4aa;bottom:-100px;right:-100px;animation:ob 12s ease-in-out infinite reverse;}
 @keyframes ob{0%,100%{transform:translate(0,0)}50%{transform:translate(35px,-35px)}}
-.card{background:rgba(255,255,255,.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:26px;padding:36px 30px;width:360px;max-width:92vw;z-index:10;max-height:92dvh;overflow-y:auto;}
+.card{background:rgba(255,255,255,.04);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:26px;padding:36px 30px;width:360px;max-width:92vw;z-index:10;max-height:92vh;overflow-y:auto;}
 .logo{text-align:center;margin-bottom:26px;}
 .lbox{width:58px;height:58px;background:linear-gradient(135deg,#e94560,#0f3460);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:10px;box-shadow:0 10px 36px rgba(233,69,96,.4);}
 .lname{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;background:linear-gradient(135deg,#fff 40%,#6b7a99);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -44,64 +43,69 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .errmsg{background:rgba(233,69,96,.12);border:1px solid rgba(233,69,96,.3);border-radius:9px;padding:9px 12px;font-size:13px;color:#ff8090;margin-bottom:12px;display:none;}
 .errmsg.show{display:block;}
 
-/* ── MAIN APP ── */
-#mainApp{position:absolute;inset:0;display:none;}
-#mainApp.active{display:block;}
+/* MAIN APP */
+#app{position:fixed;inset:0;display:none;}
 
-/* ── NAVBAR ── */
-.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:480px;height:var(--nav);background:rgba(5,8,16,.97);border-top:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-around;z-index:1000;padding-bottom:env(safe-area-inset-bottom);}
-.ni{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:6px 14px;color:var(--mut);font-size:10px;font-weight:700;border:none;background:none;font-family:inherit;}
+/* NAVBAR — selalu paling bawah */
+#navbar{position:fixed;bottom:0;left:0;right:0;height:60px;background:rgba(5,8,16,.97);border-top:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-around;z-index:500;}
+.ni{display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer;padding:4px 14px;color:var(--mut);font-size:10px;font-weight:700;border:none;background:none;font-family:inherit;}
 .ni.on{color:var(--red);}
-.nicon{font-size:22px;line-height:1;}
+.nicon{font-size:22px;line-height:1.2;}
 
-/* ── TAB CONTAINER ── */
-.tab-page{position:absolute;top:0;left:0;right:0;bottom:var(--nav);display:none;flex-direction:column;overflow:hidden;}
-.tab-page.active{display:flex;}
+/* TAB PAGES — semua fixed, show/hide dengan display */
+.page{position:fixed;top:0;left:0;right:0;bottom:60px;display:none;overflow:hidden;}
+.page.on{display:block;}
 
-/* ── FEED ── */
+/* ═══════════════════════════════
+   FEED PAGE
+═══════════════════════════════ */
 #feedPage{background:#000;}
-/* Slides container - hanya ini yang scroll/swipe */
-#vc{position:absolute;inset:0;display:flex;flex-direction:column;transition:transform .4s cubic-bezier(.25,.46,.45,.94);}
-.vs{width:100%;flex-shrink:0;position:relative;background:#000;}
-.vs iframe{position:absolute;inset:0;width:100%;height:100%;border:none;}
-.vov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.88) 0%,rgba(0,0,0,.2) 45%,transparent 65%);pointer-events:none;}
 
-/* Progress bar */
-#vbar{position:absolute;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,.15);z-index:10;pointer-events:none;}
-#vbf{height:100%;background:linear-gradient(90deg,var(--red),var(--gld));transition:width .3s;}
-#vcnt{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(8px);border-radius:18px;padding:4px 11px;font-size:12px;font-weight:700;color:rgba(255,255,255,.85);z-index:10;pointer-events:none;}
+/* Wrapper scroll — hanya ini yang bergerak */
+#slider{position:absolute;top:0;left:0;right:0;transition:transform .38s cubic-bezier(.25,.46,.45,.94);}
 
-/* Info video bawah kiri */
-#vinfo{position:absolute;bottom:90px;left:16px;right:80px;z-index:10;pointer-events:none;}
-.vbdg{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:18px;font-size:10px;font-weight:800;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px;}
+/* Satu slide = penuh tinggi halaman */
+.slide{position:relative;width:100%;background:#000;}
+.slide iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none;display:block;}
+.slide-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.1) 45%,transparent 65%);pointer-events:none;}
+
+/* UI overlay — fixed di atas feed, tidak bergerak saat swipe */
+#feedUI{position:absolute;inset:0;pointer-events:none;}
+
+/* Progress */
+#progBar{position:absolute;top:0;left:0;right:0;height:3px;background:rgba(255,255,255,.15);}
+#progFill{height:100%;background:linear-gradient(90deg,var(--red),var(--gld));transition:width .3s;}
+#slideNum{position:absolute;top:12px;right:12px;background:rgba(0,0,0,.55);border-radius:18px;padding:4px 11px;font-size:12px;font-weight:700;color:rgba(255,255,255,.85);}
+
+/* Info teks bawah kiri */
+#vInfo{position:absolute;bottom:80px;left:14px;right:76px;}
+.vbdg{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:18px;font-size:10px;font-weight:800;margin-bottom:7px;text-transform:uppercase;letter-spacing:.5px;}
 .bp{background:rgba(0,212,170,.15);color:var(--grn);border:1px solid rgba(0,212,170,.3);}
 .bk{background:rgba(233,69,96,.15);color:var(--red);border:1px solid rgba(233,69,96,.3);}
-#vtitle{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;line-height:1.35;margin-bottom:5px;color:#fff;}
-#vdesc{font-size:12px;color:rgba(255,255,255,.65);line-height:1.5;}
+#vTitle{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;line-height:1.35;margin-bottom:5px;color:#fff;}
+#vDesc{font-size:12px;color:rgba(255,255,255,.65);line-height:1.5;}
 
-/* Tombol kuis bawah */
-#qpWrap{position:absolute;bottom:16px;left:16px;right:80px;z-index:10;}
-#qbtn{width:100%;padding:14px;background:linear-gradient(135deg,#f5a623,#e67e22);border:none;border-radius:13px;color:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;animation:pu 2s ease-in-out infinite;box-shadow:0 6px 20px rgba(245,166,35,.4);}
+/* Tombol kuis — pointer-events aktif */
+#quizWrap{position:absolute;bottom:14px;left:14px;right:76px;pointer-events:auto;}
+#quizBtn{width:100%;padding:14px;background:linear-gradient(135deg,#f5a623,#e67e22);border:none;border-radius:13px;color:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;animation:pu 2s ease-in-out infinite;box-shadow:0 6px 20px rgba(245,166,35,.35);}
 @keyframes pu{0%,100%{transform:scale(1)}50%{transform:scale(1.03)}}
 
 /* Tombol suka/simpan kanan */
-#vact{position:absolute;right:10px;bottom:90px;display:flex;flex-direction:column;gap:16px;z-index:10;}
-.ab{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;border:none;background:none;font-family:inherit;}
-.ai{width:46px;height:46px;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid rgba(255,255,255,.15);}
-.al{font-size:10px;color:rgba(255,255,255,.75);font-weight:700;}
+#vActions{position:absolute;right:8px;bottom:80px;display:flex;flex-direction:column;gap:14px;pointer-events:auto;}
+.aBtn{display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;border:none;background:none;font-family:inherit;}
+.aIco{width:46px;height:46px;background:rgba(255,255,255,.12);backdrop-filter:blur(10px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:1px solid rgba(255,255,255,.15);}
+.aLbl{font-size:10px;color:rgba(255,255,255,.75);font-weight:700;}
 
-/* Empty state */
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:14px;padding:36px;text-align:center;}
-.eico{font-size:60px;}
-.etit{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;}
-.esub{font-size:13px;color:var(--mut);line-height:1.6;}
+/* ═══════════════════════════════
+   OTHER PAGES
+═══════════════════════════════ */
+.pageInner{height:100%;display:flex;flex-direction:column;overflow:hidden;}
+.phdr{background:linear-gradient(135deg,var(--sur),var(--sur2));padding:20px 18px 16px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.07);}
+.phtit{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;}
+.phsub{font-size:12px;color:var(--mut);margin-top:2px;}
+.pscroll{flex:1;overflow-y:auto;padding:14px;}
 
-/* ── LEADERBOARD ── */
-#lbPage{background:var(--bg);}
-.pghdr{background:linear-gradient(135deg,var(--sur),var(--sur2));padding:20px 18px 16px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,.07);}
-.pgtit{font-family:'Syne',sans-serif;font-size:19px;font-weight:800;}
-.pgsub{font-size:12px;color:var(--mut);margin-top:2px;}
-.pgbody{flex:1;overflow-y:auto;padding:14px;}
+/* Leaderboard */
 .lbts{display:flex;gap:7px;margin-top:12px;}
 .lbtb{flex:1;padding:9px;border:2px solid rgba(255,255,255,.08);border-radius:9px;background:transparent;color:var(--mut);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;}
 .lbtb.ap{border-color:var(--grn);color:var(--grn);background:rgba(0,212,170,.07);}
@@ -110,13 +114,10 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .lbr.me{border-color:var(--red);background:rgba(233,69,96,.06);}
 .lbrk{font-size:15px;font-weight:800;color:var(--mut);width:26px;text-align:center;}
 .lbav{width:40px;height:40px;border-radius:50%;background:var(--sur2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
-.lbin{flex:1;}
-.lbnm{font-size:14px;font-weight:700;}
-.lbmt{font-size:11px;color:var(--mut);margin-top:2px;}
+.lbin{flex:1;}.lbnm{font-size:14px;font-weight:700;}.lbmt{font-size:11px;color:var(--mut);margin-top:2px;}
 .lbpt{font-size:16px;font-weight:800;color:var(--gld);}
 
-/* ── INFO/MATERI ── */
-#infoPage{background:var(--bg);}
+/* Info cards */
 .icard{background:var(--sur);border-radius:14px;padding:18px;margin-bottom:12px;border:1px solid rgba(255,255,255,.07);}
 .icard-title{font-size:14px;font-weight:800;margin-bottom:10px;}
 .icard-body{font-size:13px;color:rgba(255,255,255,.75);line-height:1.75;}
@@ -130,30 +131,27 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .step-txt{font-size:13px;color:rgba(255,255,255,.8);line-height:1.6;}
 .team-card{display:flex;align-items:center;gap:13px;padding:13px;background:var(--sur);border-radius:13px;margin-bottom:8px;border:1px solid rgba(255,255,255,.07);}
 .team-av{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
-.team-name{font-size:13px;font-weight:800;}
-.team-role{font-size:11px;color:var(--mut);margin-top:2px;}
+.team-name{font-size:13px;font-weight:800;}.team-role{font-size:11px;color:var(--mut);margin-top:2px;}
 
-/* ── PROFIL ── */
-#profPage{background:var(--bg);overflow-y:auto;}
-.ph{background:linear-gradient(135deg,var(--sur),#0f2040);padding:46px 22px 22px;text-align:center;}
-.pav{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--gld));display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 12px;border:4px solid rgba(255,255,255,.14);}
-.pnm{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;}
-.pkl{font-size:13px;color:var(--mut);margin-top:4px;}
+/* Profil */
+.ph2{background:linear-gradient(135deg,var(--sur),#0f2040);padding:46px 22px 22px;text-align:center;}
+.pav2{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--red),var(--gld));display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 12px;border:4px solid rgba(255,255,255,.14);}
+.pnm2{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;}
+.pkl2{font-size:13px;color:var(--mut);margin-top:4px;}
 .sg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:16px;}
 .sc{background:var(--sur);border-radius:13px;padding:14px 8px;text-align:center;border:1px solid rgba(255,255,255,.07);}
 .sv{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--gld);}
 .sl{font-size:10px;color:var(--mut);margin-top:3px;font-weight:700;}
 .bs{padding:0 16px 16px;}
 .stit{font-size:14px;font-weight:800;margin-bottom:10px;}
-.bg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.bgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
 .bi{background:var(--sur);border-radius:12px;padding:11px 6px;text-align:center;border:1px solid rgba(255,255,255,.07);}
-.bic{font-size:24px;margin-bottom:4px;display:block;}
-.bnm{font-size:9px;color:var(--mut);font-weight:700;}
+.bic{font-size:24px;margin-bottom:4px;display:block;}.bnm{font-size:9px;color:var(--mut);font-weight:700;}
 .bi.lk{opacity:.28;filter:grayscale(1);}
-.boutbtn{margin:0 16px 24px;width:calc(100% - 32px);padding:12px;background:rgba(233,69,96,.1);border:2px solid rgba(233,69,96,.22);border-radius:11px;color:var(--red);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;}
+.logoutBtn{margin:0 16px 24px;width:calc(100% - 32px);padding:12px;background:rgba(233,69,96,.1);border:2px solid rgba(233,69,96,.22);border-radius:11px;color:var(--red);font-family:inherit;font-size:13px;font-weight:800;cursor:pointer;}
 
-/* ── QUIZ MODAL ── */
-#qmodal{display:none;position:fixed;inset:0;z-index:2000;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);align-items:flex-end;justify-content:center;}
+/* QUIZ MODAL */
+#qmodal{position:fixed;inset:0;z-index:999;background:rgba(0,0,0,.8);backdrop-filter:blur(12px);display:none;align-items:flex-end;justify-content:center;}
 #qmodal.on{display:flex;}
 .qsheet{background:var(--sur);border-radius:26px 26px 0 0;padding:24px 20px 40px;width:100%;max-width:480px;animation:su .33s cubic-bezier(.34,1.56,.64,1);}
 @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
@@ -166,16 +164,16 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .qopt.ok{background:rgba(0,212,170,.12);border-color:var(--grn);color:var(--grn);}
 .qopt.no{background:rgba(233,69,96,.12);border-color:var(--red);color:var(--red);}
 .qopt.dis{pointer-events:none;}
-.qresult{display:none;text-align:center;padding:16px 0;}
+.qresult{display:none;text-align:center;padding:14px 0;}
 .qresult.on{display:block;}
-.ricon{font-size:56px;display:block;margin-bottom:10px;}
+.ricon{font-size:52px;display:block;margin-bottom:10px;}
 .rtit{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px;}
 .rpts{font-size:13px;color:var(--gld);font-weight:800;margin-bottom:14px;}
 .rexp{background:rgba(255,255,255,.04);border-radius:11px;padding:12px 14px;font-size:13px;color:var(--mut);line-height:1.65;text-align:left;margin-bottom:16px;border-left:3px solid var(--grn);}
 .rnext{background:linear-gradient(135deg,var(--red),#b02040);border:none;border-radius:11px;padding:13px 36px;color:#fff;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;}
 
-/* ── TOAST ── */
-#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--sur2);border:1px solid rgba(255,255,255,.12);border-radius:13px;padding:11px 20px;font-size:13px;font-weight:700;color:#fff;z-index:3000;transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;}
+/* TOAST */
+#toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--sur2);border:1px solid rgba(255,255,255,.12);border-radius:13px;padding:11px 20px;font-size:13px;font-weight:700;color:#fff;z-index:9999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;}
 #toast.show{transform:translateX(-50%) translateY(0);}
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:2px;}
@@ -222,66 +220,71 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 </div>
 
 <!-- MAIN APP -->
-<div id="mainApp">
+<div id="app">
 
-  <!-- TAB: BERANDA -->
-  <div id="feedPage" class="tab-page active">
-    <!-- Slides (swipe area) -->
-    <div id="vc"></div>
-    <!-- Progress bar (pointer-events:none otomatis karena tidak ada handler) -->
-    <div id="vbar"><div id="vbf" style="width:0%"></div></div>
-    <div id="vcnt">1/0</div>
-    <!-- Info video (pointer-events:none agar swipe tembus) -->
-    <div id="vinfo" style="pointer-events:none;">
-      <div class="vbdg" id="vbdg"></div>
-      <div id="vtitle"></div>
-      <div id="vdesc"></div>
-    </div>
-    <!-- Tombol kuis (pointer-events aktif) -->
-    <div id="qpWrap">
-      <button id="qbtn" onclick="openQuiz()">🧩 Kerjakan Kuis</button>
-    </div>
-    <!-- Tombol suka/simpan -->
-    <div id="vact">
-      <button class="ab" onclick="showToast('❤️ Disukai!')"><div class="ai">❤️</div><div class="al">Suka</div></button>
-      <button class="ab" onclick="showToast('🔖 Disimpan!')"><div class="ai">🔖</div><div class="al">Simpan</div></button>
-    </div>
-  </div>
-
-  <!-- TAB: PERINGKAT -->
-  <div id="lbPage" class="tab-page">
-    <div class="pghdr">
-      <div class="pgtit">🏆 Papan Peringkat</div>
-      <div class="pgsub">Siapa raja EduScroll minggu ini?</div>
-      <div class="lbts">
-        <button class="lbtb ap" id="lbA" onclick="switchLB('6A')">6A — PAI</button>
-        <button class="lbtb" id="lbB" onclick="switchLB('6B')">6B — PKN</button>
+  <!-- FEED PAGE -->
+  <div id="feedPage" class="page on">
+    <!-- Slider (hanya ini yang bergerak) -->
+    <div id="slider"></div>
+    <!-- UI overlay (tidak bergerak) -->
+    <div id="feedUI">
+      <div id="progBar"><div id="progFill" style="width:0%"></div></div>
+      <div id="slideNum">1/0</div>
+      <div id="vInfo">
+        <div class="vbdg" id="vBadge"></div>
+        <div id="vTitle"></div>
+        <div id="vDesc"></div>
+      </div>
+      <div id="quizWrap">
+        <button id="quizBtn" onclick="openQuiz()">🧩 Kerjakan Kuis</button>
+      </div>
+      <div id="vActions">
+        <button class="aBtn" onclick="showToast('❤️ Disukai!')"><div class="aIco">❤️</div><div class="aLbl">Suka</div></button>
+        <button class="aBtn" onclick="showToast('🔖 Disimpan!')"><div class="aIco">🔖</div><div class="aLbl">Simpan</div></button>
       </div>
     </div>
-    <div class="pgbody" id="lbList"><div style="text-align:center;padding:40px;color:var(--mut);">Memuat...</div></div>
   </div>
 
-  <!-- TAB: MATERI -->
-  <div id="infoPage" class="tab-page">
-    <div class="pghdr">
-      <div class="pgtit">📚 Informasi Pembelajaran</div>
-      <div class="pgsub">CP, TP, Materi, Panduan & Tim</div>
+  <!-- PERINGKAT PAGE -->
+  <div id="lbPage" class="page">
+    <div class="pageInner">
+      <div class="phdr">
+        <div class="phtit">🏆 Papan Peringkat</div>
+        <div class="phsub">Siapa raja EduScroll minggu ini?</div>
+        <div class="lbts">
+          <button class="lbtb ap" id="lbA" onclick="switchLB('6A')">6A — PAI</button>
+          <button class="lbtb" id="lbB" onclick="switchLB('6B')">6B — PKN</button>
+        </div>
+      </div>
+      <div class="pscroll" id="lbList"></div>
     </div>
-    <div class="pgbody" id="infoBody"></div>
   </div>
 
-  <!-- TAB: PROFIL -->
-  <div id="profPage" class="tab-page">
-    <div id="profContent"></div>
+  <!-- MATERI PAGE -->
+  <div id="infoPage" class="page">
+    <div class="pageInner">
+      <div class="phdr">
+        <div class="phtit">📚 Informasi Pembelajaran</div>
+        <div class="phsub">CP, TP, Materi, Panduan & Tim</div>
+      </div>
+      <div class="pscroll" id="infoBody"></div>
+    </div>
+  </div>
+
+  <!-- PROFIL PAGE -->
+  <div id="profPage" class="page">
+    <div class="pageInner">
+      <div class="pscroll" id="profBody" style="padding:0;"></div>
+    </div>
   </div>
 
   <!-- NAVBAR -->
-  <nav class="nav">
+  <div id="navbar">
     <button class="ni on" id="nHome" onclick="goTab('home')"><div class="nicon">🏠</div>Beranda</button>
     <button class="ni" id="nLb" onclick="goTab('lb')"><div class="nicon">🏆</div>Peringkat</button>
     <button class="ni" id="nInfo" onclick="goTab('info')"><div class="nicon">📚</div>Materi</button>
     <button class="ni" id="nProf" onclick="goTab('prof')"><div class="nicon">👤</div>Profil</button>
-  </nav>
+  </div>
 
 </div>
 
@@ -306,7 +309,6 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
   </div>
 </div>
 
-<!-- TOAST -->
 <div id="toast"></div>
 
 <script type="module">
@@ -314,84 +316,66 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebas
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-auth.js";
 import { getFirestore, doc, getDoc, setDoc, updateDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore.js";
 
-const cfg = {
-  apiKey:"AIzaSyABivTaZ_YIfjqFCdX1Ry3vfuHBjiIhjGQ",
-  authDomain:"eduscroll-skripsi.firebaseapp.com",
-  projectId:"eduscroll-skripsi",
-  storageBucket:"eduscroll-skripsi.firebasestorage.app",
-  messagingSenderId:"642802540998",
-  appId:"1:642802540998:web:53c12f951411412209d2c7"
-};
-const app = initializeApp(cfg);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const cfg={apiKey:"AIzaSyABivTaZ_YIfjqFCdX1Ry3vfuHBjiIhjGQ",authDomain:"eduscroll-skripsi.firebaseapp.com",projectId:"eduscroll-skripsi",storageBucket:"eduscroll-skripsi.firebasestorage.app",messagingSenderId:"642802540998",appId:"1:642802540998:web:53c12f951411412209d2c7"};
+const app2=initializeApp(cfg);
+const auth=getAuth(app2);
+const db=getFirestore(app2);
 
-const EMOJIS = ['😊','🚀','⭐','🎯','🌟','😎','🦋','🎖️','🌸','💪','🏆','🔥'];
-let CU=null, role='siswa', isReg=false;
-let videos=[], idx=0, lbCls='6A';
-let busy=false;
+const EMOJIS=['😊','🚀','⭐','🎯','🌟','😎','🦋','🎖️','🌸','💪','🏆','🔥'];
+let CU=null,role='siswa',isReg=false,videos=[],idx=0,lbCls='6A',busy=false;
 
-// ── HELPERS ──
-window.showToast = msg => {
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
-};
-const showErr = msg => {
-  const e=document.getElementById('errMsg');
-  e.textContent=msg; e.classList.add('show');
-  setTimeout(()=>e.classList.remove('show'),4000);
-};
-const showScreen = id => {
+/* ── TOAST ── */
+window.showToast=msg=>{const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);};
+
+/* ── SCREENS ── */
+function show(id){
   document.getElementById('loadingScreen').style.display='none';
-  document.getElementById('loginScreen').classList.remove('active');
-  document.getElementById('mainApp').classList.remove('active');
-  if(id==='login') document.getElementById('loginScreen').classList.add('active');
-  else if(id==='app') document.getElementById('mainApp').classList.add('active');
-  else document.getElementById('loadingScreen').style.display='flex';
-};
+  document.getElementById('loginScreen').style.display='none';
+  document.getElementById('app').style.display='none';
+  if(id==='load') document.getElementById('loadingScreen').style.display='flex';
+  else if(id==='login') document.getElementById('loginScreen').style.display='flex';
+  else document.getElementById('app').style.display='block';
+}
 
-// ── AUTH ──
-onAuthStateChanged(auth, async user => {
-  if(!user){showScreen('login');return;}
+/* ── AUTH ── */
+onAuthStateChanged(auth,async user=>{
+  if(!user){show('login');return;}
   try{
     const ud=await getDoc(doc(db,'users',user.uid));
-    if(!ud.exists()){showScreen('login');return;}
+    if(!ud.exists()){show('login');return;}
     CU={uid:user.uid,...ud.data()};
     if(CU.role==='guru'){window.location.href='guru.html';return;}
     videos=await loadVids(CU.kelas);
-    showScreen('app');
+    show('app');
     buildFeed();
     buildInfo();
     renderLB();
-  }catch(e){console.error(e);showScreen('login');}
+  }catch(e){console.error(e);show('login');}
 });
 
-window.setRole = r => {
+window.setRole=r=>{
   role=r;
   document.getElementById('tabSiswa').classList.toggle('on',r==='siswa');
   document.getElementById('tabGuru').classList.toggle('on',r==='guru');
   document.getElementById('kelasGrp').style.display=r==='siswa'?'block':'none';
   if(r==='guru') document.getElementById('nameGrp').style.display='none';
 };
-window.toggleReg = () => {
+window.toggleReg=()=>{
   isReg=!isReg;
   document.getElementById('nameGrp').style.display=isReg?'block':'none';
   document.getElementById('pass2Grp').style.display=isReg?'block':'none';
   document.getElementById('btnLogin').style.display=isReg?'none':'block';
   document.getElementById('btnReg').style.display=isReg?'block':'none';
-  document.getElementById('hintTxt').innerHTML=isReg
-    ?'Sudah punya akun? <span onclick="toggleReg()">Masuk di sini</span>'
-    :'Belum punya akun? <span onclick="toggleReg()">Daftar di sini</span>';
+  document.getElementById('hintTxt').innerHTML=isReg?'Sudah punya akun? <span onclick="toggleReg()">Masuk di sini</span>':'Belum punya akun? <span onclick="toggleReg()">Daftar di sini</span>';
 };
-window.doLogin = async () => {
+window.doLogin=async()=>{
   const email=document.getElementById('inEmail').value.trim();
   const pass=document.getElementById('inPass').value;
   if(!email||!pass){showErr('Email dan password wajib diisi!');return;}
-  try{showScreen('loading');await signInWithEmailAndPassword(auth,email,pass);}
-  catch(e){showScreen('login');showErr('Email atau password salah!');}
+  try{show('load');await signInWithEmailAndPassword(auth,email,pass);}
+  catch(e){show('login');showErr('Email atau password salah!');}
 };
-window.doRegister = async () => {
+window.doRegister=async()=>{
   const email=document.getElementById('inEmail').value.trim();
   const name=document.getElementById('inName').value.trim();
   const kelas=document.getElementById('inKelas').value;
@@ -401,18 +385,15 @@ window.doRegister = async () => {
   if(pass!==pass2){showErr('Password tidak cocok!');return;}
   if(pass.length<6){showErr('Password minimal 6 karakter!');return;}
   try{
-    showScreen('loading');
+    show('load');
     const cred=await createUserWithEmailAndPassword(auth,email,pass);
-    await setDoc(doc(db,'users',cred.user.uid),{
-      name,email,kelas,role,
-      emoji:EMOJIS[Math.floor(Math.random()*EMOJIS.length)],
-      points:0,completedVideos:[],createdAt:new Date().toISOString()
-    });
-  }catch(e){showScreen('login');showErr(e.code==='auth/email-already-in-use'?'Email sudah terdaftar!':'Gagal daftar: '+e.message);}
+    await setDoc(doc(db,'users',cred.user.uid),{name,email,kelas,role,emoji:EMOJIS[Math.floor(Math.random()*EMOJIS.length)],points:0,completedVideos:[],createdAt:new Date().toISOString()});
+  }catch(e){show('login');showErr(e.code==='auth/email-already-in-use'?'Email sudah terdaftar!':'Gagal daftar: '+e.message);}
 };
-window.doLogout = async () => {await signOut(auth);CU=null;};
+const showErr=msg=>{const e=document.getElementById('errMsg');e.textContent=msg;e.classList.add('show');setTimeout(()=>e.classList.remove('show'),4000);};
+window.doLogout=async()=>{await signOut(auth);CU=null;};
 
-// ── LOAD VIDEOS ──
+/* ── LOAD VIDEOS ── */
 async function loadVids(kelas){
   try{
     const snap=await getDocs(query(collection(db,'videos'),where('kelas','==',kelas)));
@@ -422,120 +403,108 @@ async function loadVids(kelas){
   }catch(e){console.error(e);return[];}
 }
 
-// ── FEED ──
+/* ── BUILD FEED ── */
 function buildFeed(){
-  const vc=document.getElementById('vc');
-  // Set tinggi slide sesuai feedPage
+  const slider=document.getElementById('slider');
   const fp=document.getElementById('feedPage');
-  const h=fp.clientHeight;
+  const H=fp.clientHeight; // tinggi feedPage (layar - navbar)
+
+  slider.innerHTML='';
 
   if(!videos.length){
-    vc.innerHTML='<div class="empty"><div class="eico">🎬</div><div class="etit">Belum Ada Video</div><div class="esub">Guru belum menambahkan video.<br>Tunggu sebentar ya!</div></div>';
-    document.getElementById('vcnt').textContent='0/0';
-    document.getElementById('qpWrap').style.display='none';
-    document.getElementById('vinfo').style.display='none';
-    document.getElementById('vact').style.display='none';
+    slider.innerHTML=`<div style="height:${H}px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:36px;text-align:center;"><div style="font-size:60px">🎬</div><div style="font-family:Syne,sans-serif;font-size:19px;font-weight:800;">Belum Ada Video</div><div style="font-size:13px;color:var(--mut);line-height:1.6;">Guru belum menambahkan video.<br>Tunggu sebentar ya!</div></div>`;
+    document.getElementById('slideNum').textContent='0/0';
+    document.getElementById('quizWrap').style.display='none';
+    document.getElementById('vInfo').style.display='none';
+    document.getElementById('vActions').style.display='none';
     return;
   }
 
-  vc.innerHTML='';
   videos.forEach(v=>{
     const s=document.createElement('div');
-    s.className='vs';
-    s.style.height=h+'px';
-    s.innerHTML='<iframe src="https://www.youtube.com/embed/'+v.youtubeId+'?rel=0&modestbranding=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope" allowfullscreen></iframe><div class="vov"></div>';
-    vc.appendChild(s);
+    s.className='slide';
+    s.style.height=H+'px';
+    s.innerHTML=`<iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope" allowfullscreen></iframe><div class="slide-overlay"></div>`;
+    slider.appendChild(s);
   });
 
-  goTo(0, false);
+  goTo(0,false);
   initSwipe();
 }
 
-function goTo(i, animate=true){
+/* ── NAVIGATION ── */
+function goTo(i,anim=true){
   idx=i;
   const fp=document.getElementById('feedPage');
-  const h=fp.clientHeight;
-  document.getElementById('vc').style.transition=animate?'transform .4s cubic-bezier(.25,.46,.45,.94)':'none';
-  document.getElementById('vc').style.transform='translateY(-'+(i*h)+'px)';
-  updateUI();
+  const H=fp.clientHeight;
+  const slider=document.getElementById('slider');
+  slider.style.transition=anim?'transform .38s cubic-bezier(.25,.46,.45,.94)':'none';
+  slider.style.transform=`translateY(${-i*H}px)`;
+  updateFeedUI();
 }
 
-function updateUI(){
+function updateFeedUI(){
   if(!videos.length)return;
   const v=videos[idx];
   const done=CU.completedVideos||[];
   const isPAI=CU.kelas==='6A';
-  const bdg=document.getElementById('vbdg');
+  const bdg=document.getElementById('vBadge');
   bdg.className='vbdg '+(isPAI?'bp':'bk');
   bdg.textContent=(isPAI?'🕌':'🤝')+' '+v.dimension;
-  document.getElementById('vtitle').textContent=v.title;
-  document.getElementById('vdesc').textContent=v.desc||'';
-  document.getElementById('qbtn').textContent=done.includes(v.id)?'🧩 Kerjakan Kuis ✅':'🧩 Kerjakan Kuis';
+  document.getElementById('vTitle').textContent=v.title;
+  document.getElementById('vDesc').textContent=v.desc||'';
+  document.getElementById('quizBtn').textContent=done.includes(v.id)?'🧩 Kerjakan Kuis ✅':'🧩 Kerjakan Kuis';
   const p=videos.length>1?(idx/(videos.length-1))*100:0;
-  document.getElementById('vbf').style.width=p+'%';
-  document.getElementById('vcnt').textContent=(idx+1)+'/'+videos.length;
+  document.getElementById('progFill').style.width=p+'%';
+  document.getElementById('slideNum').textContent=(idx+1)+'/'+videos.length;
 }
 
+/* ── SWIPE ── */
 function initSwipe(){
   const fp=document.getElementById('feedPage');
-  let startY=0, moved=false;
+  let sy=0,moved=false;
 
   fp.addEventListener('touchstart',e=>{
-    // Abaikan jika dari tombol
-    if(e.target.closest('button')||e.target.closest('.ab')) return;
-    startY=e.touches[0].clientY;
-    moved=false;
+    if(e.target.closest('button')) return;
+    sy=e.touches[0].clientY; moved=false;
   },{passive:true});
 
-  fp.addEventListener('touchmove',e=>{
-    moved=true;
-  },{passive:true});
+  fp.addEventListener('touchmove',e=>{moved=true;},{passive:true});
 
   fp.addEventListener('touchend',e=>{
-    if(e.target.closest('button')||e.target.closest('.ab')) return;
+    if(e.target.closest('button')) return;
     if(!moved) return;
-    const dy=startY-e.changedTouches[0].clientY;
+    const dy=sy-e.changedTouches[0].clientY;
     if(Math.abs(dy)<50) return;
-    if(dy>0) nextVideo(); else prevVideo();
+    dy>0?nextV():prevV();
   },{passive:true});
 
-  // Mouse wheel (PC)
   let acc=0,tmr=null;
   fp.addEventListener('wheel',e=>{
     e.preventDefault();
     acc+=e.deltaY;
     clearTimeout(tmr);
-    tmr=setTimeout(()=>{
-      if(Math.abs(acc)>80){acc>0?nextVideo():prevVideo();}
-      acc=0;
-    },80);
+    tmr=setTimeout(()=>{if(Math.abs(acc)>80){acc>0?nextV():prevV();}acc=0;},80);
   },{passive:false});
 }
 
-function nextVideo(){
-  if(busy)return;
-  if(idx<videos.length-1){busy=true;goTo(idx+1);setTimeout(()=>busy=false,500);}
-  else showToast('🎉 Semua video sudah ditonton!');
-}
-function prevVideo(){
-  if(busy)return;
-  if(idx>0){busy=true;goTo(idx-1);setTimeout(()=>busy=false,500);}
-}
+function nextV(){if(busy)return;if(idx<videos.length-1){busy=true;goTo(idx+1);setTimeout(()=>busy=false,500);}else showToast('🎉 Semua video sudah ditonton!');}
+function prevV(){if(busy)return;if(idx>0){busy=true;goTo(idx-1);setTimeout(()=>busy=false,500);}}
 
-// ── TABS ──
-window.goTab = tab => {
-  const pages={home:'feedPage',lb:'lbPage',info:'infoPage',prof:'profPage'};
-  const navs={home:'nHome',lb:'nLb',info:'nInfo',prof:'nProf'};
-  Object.values(pages).forEach(id=>document.getElementById(id).classList.remove('active'));
-  Object.values(navs).forEach(id=>document.getElementById(id).classList.remove('on'));
-  document.getElementById(pages[tab]).classList.add('active');
-  document.getElementById(navs[tab]).classList.add('on');
+/* ── TABS ── */
+window.goTab=tab=>{
+  const map={home:'feedPage',lb:'lbPage',info:'infoPage',prof:'profPage'};
+  const nav={home:'nHome',lb:'nLb',info:'nInfo',prof:'nProf'};
+  Object.values(map).forEach(id=>document.getElementById(id).classList.remove('on'));
+  Object.values(nav).forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById(map[tab]).classList.add('on');
+  document.getElementById(nav[tab]).classList.add('on');
   if(tab==='lb') renderLB();
   if(tab==='prof') renderProf();
 };
 
-// ── LEADERBOARD ──
-window.switchLB = cls => {
+/* ── LEADERBOARD ── */
+window.switchLB=cls=>{
   lbCls=cls;
   document.getElementById('lbA').className='lbtb'+(cls==='6A'?' ap':'');
   document.getElementById('lbB').className='lbtb'+(cls==='6B'?' ak':'');
@@ -551,30 +520,24 @@ async function renderLB(){
     const medals=['🥇','🥈','🥉'];
     document.getElementById('lbList').innerHTML=list.slice(0,20).map((u,i)=>{
       const me=u.uid===CU.uid;
-      return '<div class="lbr'+(me?' me':'')+'"><div class="lbrk">'+(medals[i]||i+1)+'</div>'
-        +'<div class="lbav">'+(u.emoji||'😊')+'</div>'
-        +'<div class="lbin"><div class="lbnm">'+(me?'⭐ '+u.name+' (Kamu)':u.name)+'</div>'
-        +'<div class="lbmt">'+((u.completedVideos||[]).length)+' video selesai</div></div>'
-        +'<div class="lbpt">'+(u.points||0)+'</div></div>';
+      return `<div class="lbr${me?' me':''}"><div class="lbrk">${medals[i]||i+1}</div><div class="lbav">${u.emoji||'😊'}</div><div class="lbin"><div class="lbnm">${me?'⭐ '+u.name+' (Kamu)':u.name}</div><div class="lbmt">${(u.completedVideos||[]).length} video selesai</div></div><div class="lbpt">${u.points||0}</div></div>`;
     }).join('');
   }catch(e){document.getElementById('lbList').innerHTML='<div style="text-align:center;padding:40px;color:var(--mut);">Gagal memuat.</div>';}
 }
 
-// ── INFO ──
+/* ── INFO ── */
 function buildInfo(){
   const isPAI=CU.kelas==='6A';
+  const c=isPAI?'--grn':'--red', bc=isPAI?'badge-pai':'badge-pkn', rgb=isPAI?'0,212,170':'233,69,96';
   document.getElementById('infoBody').innerHTML=`
     <div class="icard">
       <div class="icard-title">📜 Capaian Pembelajaran (CP)</div>
       <div style="font-size:11px;color:var(--gld);font-weight:800;margin-bottom:8px;">SK Kepala BSKAP No. 008/H/KR/2022</div>
       <div class="icard-body">${isPAI
-        ?'<b>🕌 PAI & Budi Pekerti — Fase C (Kelas VI)</b><br><br>Pada elemen <b>Akhlak</b>, peserta didik mengenal dialog antar agama dan kepercayaan dan menyadari peluang dan tantangan yang bisa muncul dari keragaman di Indonesia. Peserta didik memahami pentingnya menjaga kesatuan atas keberagaman dan memahami peran manusia sebagai khalifah Allah di bumi untuk menebarkan kasih sayang.'
-        :'<b>🤝 Pendidikan Pancasila — Fase C (Kelas VI)</b><br><br>Elemen <b>Bhinneka Tunggal Ika</b>: peserta didik mampu menampilkan sikap kerja sama dalam berbagai bentuk keberagaman suku bangsa, sosial, dan budaya di Indonesia yang terikat persatuan dan kesatuan.'
+        ?'<b>🕌 PAI & Budi Pekerti — Fase C (Kelas VI)</b><br><br>Pada elemen <b>Akhlak</b>, peserta didik mengenal dialog antar agama dan kepercayaan dan menyadari peluang dan tantangan yang bisa muncul dari keragaman di Indonesia. Peserta didik memahami pentingnya menjaga kesatuan atas keberagaman dan memahami peran manusia sebagai khalifah Allah di bumi untuk menebarkan kasih sayang dan tidak membuat kerusakan di muka bumi.'
+        :'<b>🤝 Pendidikan Pancasila — Fase C (Kelas VI)</b><br><br>Elemen <b>Bhinneka Tunggal Ika</b>: peserta didik mampu menampilkan sikap kerja sama dalam berbagai bentuk keberagaman suku bangsa, sosial, dan budaya di Indonesia yang terikat persatuan dan kesatuan. Peserta didik menganalisis bentuk-bentuk norma, aturan, hak, dan kewajiban dalam kedudukannya sebagai anggota keluarga, warga sekolah, dan bagian dari masyarakat.'
       }</div>
-      <div class="badge-row">
-        <span class="badge-item ${isPAI?'badge-pai':'badge-pkn'}">${isPAI?'Elemen: Akhlak':'Elemen: Bhinneka Tunggal Ika'}</span>
-        <span class="badge-item ${isPAI?'badge-pai':'badge-pkn'}">Fase C · Kelas VI SD</span>
-      </div>
+      <div class="badge-row"><span class="badge-item ${bc}">${isPAI?'Elemen: Akhlak':'Elemen: Bhinneka Tunggal Ika'}</span><span class="badge-item ${bc}">Fase C · Kelas VI SD</span></div>
     </div>
     <div class="icard">
       <div class="icard-title">🎯 Tujuan Pembelajaran (TP)</div>
@@ -586,79 +549,47 @@ function buildInfo(){
     <div class="icard">
       <div class="icard-title">📖 Materi Pembelajaran</div>
       <div class="icard-sub">${isPAI?'5 Dimensi Akhlak Digital PAI':'5 Dimensi Toleransi Keberagaman PKN'}</div>
-      ${(isPAI
-        ?['💬 Adab Komunikasi Online','✅ Kejujuran Digital (Anti-Hoaks)','👗 Menjaga Aurat Digital','🤐 Menghindari Ghibah Digital','🔒 Amanah Data Pribadi']
-        :['🌏 Mengenal Keberagaman Indonesia','🏛️ Bhinneka Tunggal Ika','🕊️ Toleransi Antar Umat Beragama','🤝 Gotong Royong dalam Keberagaman','🇮🇩 Menjaga Persatuan dan Kesatuan']
-      ).map((d,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(${isPAI?'0,212,170':'233,69,96'},.07);border-radius:10px;border-left:3px solid var(${isPAI?'--grn':'--red'});margin-bottom:7px;"><span style="font-size:11px;font-weight:800;color:var(${isPAI?'--grn':'--red'});">${i+1}</span><span style="font-size:13px;">${d}</span></div>`).join('')}
+      ${(isPAI?['💬 Adab Komunikasi Online','✅ Kejujuran Digital (Anti-Hoaks)','👗 Menjaga Aurat Digital','🤐 Menghindari Ghibah Digital','🔒 Amanah Data Pribadi']:['🌏 Mengenal Keberagaman Indonesia','🏛️ Bhinneka Tunggal Ika','🕊️ Toleransi Antar Umat Beragama','🤝 Gotong Royong dalam Keberagaman','🇮🇩 Menjaga Persatuan dan Kesatuan']).map((d,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;background:rgba(${rgb},.07);border-radius:10px;border-left:3px solid var(${c});margin-bottom:7px;"><span style="font-size:11px;font-weight:800;color:var(${c});">${i+1}</span><span style="font-size:13px;">${d}</span></div>`).join('')}
     </div>
     <div class="icard">
       <div class="icard-title">📱 Panduan Penggunaan</div>
-      ${[['Swipe ke atas/bawah','Geser layar untuk berpindah antar video pembelajaran'],
-         ['Tonton video','Setiap video membahas satu topik. Tonton hingga selesai'],
-         ['Kerjakan kuis','Klik 🧩 Kerjakan Kuis setelah menonton untuk mendapat poin'],
-         ['Kumpulkan poin','Benar = +100 poin 🔥, Salah = +20 poin. Kumpulkan sebanyaknya!'],
-         ['Cek peringkat','Lihat posisimu di 🏆 Peringkat dan bersaing dengan teman'],
-         ['Lihat profil','Pantau progress dan koleksi lencana di 👤 Profil'],
-      ].map((s,i)=>`<div class="step"><div class="step-num">${i+1}</div><div class="step-txt"><b>${s[0]}</b><br>${s[1]}</div></div>`).join('')}
+      ${[['Swipe ke atas/bawah','Geser layar untuk berpindah antar video pembelajaran'],['Tonton video','Setiap video membahas satu topik. Tonton hingga selesai untuk pemahaman maksimal'],['Kerjakan kuis','Klik 🧩 Kerjakan Kuis setelah menonton untuk mendapat poin'],['Kumpulkan poin','Benar = +100 poin 🔥, Salah = +20 poin. Kumpulkan sebanyaknya!'],['Cek peringkat','Lihat posisimu di 🏆 Peringkat dan bersaing dengan teman sekelas'],['Lihat profil','Pantau progress belajar dan koleksi lencana di 👤 Profil']].map((s,i)=>`<div class="step"><div class="step-num">${i+1}</div><div class="step-txt"><b>${s[0]}</b><br>${s[1]}</div></div>`).join('')}
     </div>
     <div class="icard">
       <div class="icard-title">👨‍💻 Tim Pengembang</div>
-      ${[['👨‍🎓','Hibban Nurrizki','Pengembang Aplikasi & Peneliti','#e94560'],
-         ['👩‍🎓','Ina Mutmainah','Pengembang Aplikasi & Peneliti','#e94560'],
-         ['👩‍🏫','Ocha Alyazazkia','Pengembang Materi PKN','#00d4aa'],
-         ['👩‍🏫','Sofia Sri Maharani Bundah','Pengembang Materi PKN','#00d4aa'],
-         ['👩‍🏫','Fitri Maryani','Pengembang Materi PAI','#f5a623'],
-      ].map(t=>`<div class="team-card"><div class="team-av" style="background:linear-gradient(135deg,${t[3]},${t[3]}88)">${t[0]}</div><div><div class="team-name">${t[1]}</div><div class="team-role">${t[2]}</div></div></div>`).join('')}
+      ${[['👨‍🎓','Hibban Nurrizki','Pengembang Aplikasi & Peneliti','#e94560'],['👩‍🎓','Ina Mutmainah','Pengembang Aplikasi & Peneliti','#e94560'],['👩‍🏫','Ocha Alyazazkia','Pengembang Materi PKN','#00d4aa'],['👩‍🏫','Sofia Sri Maharani Bundah','Pengembang Materi PKN','#00d4aa'],['👩‍🏫','Fitri Maryani','Pengembang Materi PAI','#f5a623']].map(t=>`<div class="team-card"><div class="team-av" style="background:linear-gradient(135deg,${t[3]},${t[3]}88)">${t[0]}</div><div><div class="team-name">${t[1]}</div><div class="team-role">${t[2]}</div></div></div>`).join('')}
       <div style="text-align:center;font-size:11px;color:var(--mut);padding:10px 0 2px;">EduScroll v1.0 · Penelitian Skripsi 2026</div>
     </div>`;
 }
 
-// ── PROFIL ──
+/* ── PROFIL ── */
 function renderProf(){
   if(!CU)return;
-  const done=(CU.completedVideos||[]).length, pts=CU.points||0;
-  const badges=[
-    {icon:'🎬',name:'Video Pertama',lk:done<1},{icon:'📚',name:'Pelajar Rajin',lk:done<3},
-    {icon:'🏆',name:'Juara Kuis',lk:pts<300},{icon:'🌟',name:'Bintang Kelas',lk:pts<600},
-    {icon:'🔥',name:'On Fire',lk:done<10},{icon:'💎',name:'Siswa Teladan',lk:pts<1000},
-    {icon:'🎓',name:'Lulus Materi',lk:done<videos.length},{icon:'👑',name:'Raja EduScroll',lk:pts<2000}
-  ];
-  document.getElementById('profContent').innerHTML=
-    '<div class="ph"><div class="pav">'+(CU.emoji||'😊')+'</div>'
-    +'<div class="pnm">'+CU.name+'</div>'
-    +'<div class="pkl">Kelas '+CU.kelas+' — '+(CU.kelas==='6A'?'🕌 PAI Akhlak Digital':'🤝 PKN Toleransi Keberagaman')+'</div></div>'
-    +'<div class="sg"><div class="sc"><div class="sv">'+pts+'</div><div class="sl">Total Poin</div></div>'
-    +'<div class="sc"><div class="sv">'+done+'</div><div class="sl">Video Selesai</div></div>'
-    +'<div class="sc"><div class="sv">'+videos.length+'</div><div class="sl">Total Video</div></div></div>'
-    +'<div class="bs"><div class="stit">🏅 Lencana Kamu</div><div class="bg">'
-    +badges.map(b=>'<div class="bi'+(b.lk?' lk':'')+'"><span class="bic">'+b.icon+'</span><div class="bnm">'+b.name+'</div></div>').join('')
-    +'</div></div><button class="boutbtn" onclick="doLogout()">🚪 Keluar</button>';
+  const done=(CU.completedVideos||[]).length,pts=CU.points||0;
+  const badges=[{icon:'🎬',name:'Video Pertama',lk:done<1},{icon:'📚',name:'Pelajar Rajin',lk:done<3},{icon:'🏆',name:'Juara Kuis',lk:pts<300},{icon:'🌟',name:'Bintang Kelas',lk:pts<600},{icon:'🔥',name:'On Fire',lk:done<10},{icon:'💎',name:'Siswa Teladan',lk:pts<1000},{icon:'🎓',name:'Lulus Materi',lk:done<videos.length},{icon:'👑',name:'Raja EduScroll',lk:pts<2000}];
+  document.getElementById('profBody').innerHTML=
+    `<div class="ph2"><div class="pav2">${CU.emoji||'😊'}</div><div class="pnm2">${CU.name}</div><div class="pkl2">Kelas ${CU.kelas} — ${CU.kelas==='6A'?'🕌 PAI Akhlak Digital':'🤝 PKN Toleransi Keberagaman'}</div></div>`
+    +`<div class="sg"><div class="sc"><div class="sv">${pts}</div><div class="sl">Total Poin</div></div><div class="sc"><div class="sv">${done}</div><div class="sl">Video Selesai</div></div><div class="sc"><div class="sv">${videos.length}</div><div class="sl">Total Video</div></div></div>`
+    +`<div class="bs"><div class="stit">🏅 Lencana Kamu</div><div class="bgrid">${badges.map(b=>`<div class="bi${b.lk?' lk':''}"><span class="bic">${b.icon}</span><div class="bnm">${b.name}</div></div>`).join('')}</div></div>`
+    +`<button class="logoutBtn" onclick="doLogout()">🚪 Keluar</button>`;
 }
 
-// ── QUIZ ──
-window.openQuiz = () => {
+/* ── QUIZ ── */
+window.openQuiz=()=>{
   if(!videos.length)return;
   const v=videos[idx];
-  if(!v||!v.quiz)return;
+  if(!v?.quiz)return;
   document.getElementById('qq').textContent=v.quiz.question;
-  document.getElementById('qopts').innerHTML=v.quiz.options.map((o,j)=>
-    '<button class="qopt" onclick="answerQ('+j+')">'+'ABCD'[j]+'. '+o+'</button>'
-  ).join('');
+  document.getElementById('qopts').innerHTML=v.quiz.options.map((o,j)=>`<button class="qopt" onclick="answerQ(${j})">${'ABCD'[j]}. ${o}</button>`).join('');
   document.getElementById('qbody').style.display='block';
   document.getElementById('qresult').classList.remove('on');
   document.getElementById('qmodal').classList.add('on');
 };
-
-window.answerQ = async chosen => {
+window.answerQ=async chosen=>{
   const v=videos[idx];
   const correct=v.quiz.correct;
-  document.querySelectorAll('.qopt').forEach((o,i)=>{
-    o.classList.add('dis');
-    if(i===correct) o.classList.add('ok');
-    else if(i===chosen) o.classList.add('no');
-  });
-  const ok=chosen===correct;
-  const gained=ok?100:20;
+  document.querySelectorAll('.qopt').forEach((o,i)=>{o.classList.add('dis');if(i===correct)o.classList.add('ok');else if(i===chosen)o.classList.add('no');});
+  const ok=chosen===correct,gained=ok?100:20;
   setTimeout(async()=>{
     document.getElementById('qbody').style.display='none';
     document.getElementById('qresult').classList.add('on');
@@ -669,17 +600,12 @@ window.answerQ = async chosen => {
     const done=CU.completedVideos||[];
     const newDone=done.includes(v.id)?done:[...done,v.id];
     const newPts=(CU.points||0)+gained;
-    try{
-      await updateDoc(doc(db,'users',CU.uid),{points:newPts,completedVideos:newDone});
-      CU.points=newPts; CU.completedVideos=newDone;
-      updateUI();
-    }catch(e){console.error(e);}
+    try{await updateDoc(doc(db,'users',CU.uid),{points:newPts,completedVideos:newDone});CU.points=newPts;CU.completedVideos=newDone;updateFeedUI();}catch(e){console.error(e);}
   },700);
 };
-
-window.closeQuiz = (next=false) => {
+window.closeQuiz=(next=false)=>{
   document.getElementById('qmodal').classList.remove('on');
-  if(next && idx<videos.length-1) goTo(idx+1);
+  if(next&&idx<videos.length-1) goTo(idx+1);
 };
 </script>
 </body>
