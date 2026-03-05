@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduScroll — Dashboard Guru</title>
+<title>NEODIK — Dashboard Guru</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
@@ -88,7 +88,7 @@
 <div id="app">
   <div class="hdr">
     <div class="hdr-top">
-      <div><div class="hdr-title">👨‍🏫 Dashboard Guru</div><div class="hdr-sub" id="hdrSub">EduScroll</div></div>
+      <div><div class="hdr-title">👨‍🏫 Dashboard Guru</div><div class="hdr-sub" id="hdrSub">NEODIK</div></div>
       <button class="btn-out" onclick="doLogout()">🚪 Keluar</button>
     </div>
     <div class="tabs">
@@ -110,9 +110,9 @@ import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, query, where,
 
 const firebaseConfig = {
   apiKey: "AIzaSyABivTaZ_YIfjqFCdX1Ry3vfuHBjiIhjGQ",
-  authDomain: "eduscroll-skripsi.firebaseapp.com",
-  projectId: "eduscroll-skripsi",
-  storageBucket: "eduscroll-skripsi.firebasestorage.app",
+  authDomain: "NEODIK-skripsi.firebaseapp.com",
+  projectId: "NEODIK-skripsi",
+  storageBucket: "NEODIK-skripsi.firebasestorage.app",
   messagingSenderId: "642802540998",
   appId: "1:642802540998:web:53c12f951411412209d2c7"
 };
@@ -205,7 +205,7 @@ function renderUpload(){
         ondrop="handleDrop(event)">
         <span class="uicon">📊</span>
         <div class="utitle">Klik atau drag file Excel ke sini</div>
-        <div class="usub">Format .xlsx · Gunakan template EduScroll<br>Maks. 100 video per upload</div>
+        <div class="usub">Format .xlsx · Gunakan template NEODIK<br>Maks. 100 video per upload</div>
       </div>
       <input type="file" id="xlsxIn" style="display:none" accept=".xlsx,.xls" onchange="handleFile(event)">
       <div id="uprogWrap" style="display:none;margin-top:12px;">
