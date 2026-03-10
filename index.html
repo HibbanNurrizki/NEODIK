@@ -466,6 +466,22 @@ function goTo(i,anim=true){
   updateFeedUI();
 }
 
+   function updateFeedUI(){
+  if(!videos.length)return;
+  const v=videos[idx];
+  const done=CU.completedVideos||[];
+  const isPAI=CU.kelas==='6A';
+  const bdg=document.getElementById('vBadge');
+  bdg.className='vbdg '+(isPAI?'bp':'bk');
+  bdg.textContent=(isPAI?'🕌':'🤝')+' '+v.dimension;
+  document.getElementById('vTitle').textContent=v.title;
+  document.getElementById('vDesc').textContent=v.desc||'';
+  document.getElementById('quizBtn').textContent=done.includes(v.id)?'🧩 Kerjakan Kuis ✅':'🧩 Kerjakan Kuis';
+  const p=videos.length>1?(idx/(videos.length-1))*100:0;
+  document.getElementById('progFill').style.width=p+'%';
+  document.getElementById('slideNum').textContent=(idx+1)+'/'+videos.length;
+}
+   
 /* ── SWIPE ── */
 function initSwipe(){
   const fp=document.getElementById('feedPage');
