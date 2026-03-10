@@ -414,33 +414,47 @@ async function loadVids(kelas){
 function buildFeed(){
   const slider=document.getElementById('slider');
   const fp=document.getElementById('feedPage');
-  const H=fp.clientHeight; // tinggi feedPage (layar - navbar)
-
+  const H=fp.clientHeight;
   slider.innerHTML='';
-
   if(!videos.length){
-    slider.innerHTML=`<div style="height:${H}px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:36px;text-align:center;"><div style="font-size:60px">🎬</div><div style="font-family:Syne,sans-serif;font-size:19px;font-weight:800;">Belum Ada Video</div><div style="font-size:13px;color:var(--mut);line-height:1.6;">Guru belum menambahkan video.<br>Tunggu sebentar ya!</div></div>`;
+    slider.innerHTML=`<div style="height:${H}px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:36px;text-align:center;"><div style="font-size:60px">🎬</div><div style="font-family:Syne,sans-serif;font-size:19px;font-weight:800;">Belum Ada Video</div></div>`;
     document.getElementById('slideNum').textContent='0/0';
     document.getElementById('quizWrap').style.display='none';
     document.getElementById('vInfo').style.display='none';
     document.getElementById('vActions').style.display='none';
     return;
   }
-
-  videos.forEach(v=>{
+  videos.forEach((v,i)=>{
     const s=document.createElement('div');
     s.className='slide';
     s.style.height=H+'px';
-    s.innerHTML=`<iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope" allowfullscreen></iframe><div class="slide-overlay"></div>`;
+    s.id='slide_'+i;
+    s.innerHTML=`<div class="slide-overlay"></div>`;
     slider.appendChild(s);
   });
-
-goTo(idx,false);
-initSwipe();
-show('app');
+  goTo(idx,false);
+  initSwipe();
+  show('app');
 }
 
-/* ── NAVIGATION ── */
+function loadNearby(i){
+  [i-1,i,i+1].forEach(n=>{
+    if(n<0||n>=videos.length)return;
+    const s=document.getElementById('slide_'+n);
+    if(!s||s.querySelector('iframe'))return;
+    const v=videos[n];
+    s.innerHTML=`<iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope" allowfullscreen></iframe><div class="slide-overlay"></div>`;
+  });
+  videos.forEach((_,n)=>{
+    if(Math.abs(n-i)>2){
+      const s=document.getElementById('slide_'+n);
+      if(s&&s.querySelector('iframe')){
+        s.innerHTML=`<div class="slide-overlay"></div>`;
+      }
+    }
+  });
+}
+
 function goTo(i,anim=true){
   idx=i;
   const fp=document.getElementById('feedPage');
@@ -448,23 +462,8 @@ function goTo(i,anim=true){
   const slider=document.getElementById('slider');
   slider.style.transition=anim?'transform .38s cubic-bezier(.25,.46,.45,.94)':'none';
   slider.style.transform=`translateY(${-i*H}px)`;
+  loadNearby(i);
   updateFeedUI();
-}
-
-function updateFeedUI(){
-  if(!videos.length)return;
-  const v=videos[idx];
-  const done=CU.completedVideos||[];
-  const isPAI=CU.kelas==='6A';
-  const bdg=document.getElementById('vBadge');
-  bdg.className='vbdg '+(isPAI?'bp':'bk');
-  bdg.textContent=(isPAI?'🕌':'🤝')+' '+v.dimension;
-  document.getElementById('vTitle').textContent=v.title;
-  document.getElementById('vDesc').textContent=v.desc||'';
-  document.getElementById('quizBtn').textContent=done.includes(v.id)?'🧩 Kerjakan Kuis ✅':'🧩 Kerjakan Kuis';
-  const p=videos.length>1?(idx/(videos.length-1))*100:0;
-  document.getElementById('progFill').style.width=p+'%';
-  document.getElementById('slideNum').textContent=(idx+1)+'/'+videos.length;
 }
 
 /* ── SWIPE ── */
