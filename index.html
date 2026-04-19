@@ -354,6 +354,7 @@ onAuthStateChanged(auth,async user=>{
     if(CU.role==='guru'){window.location.href='guru.html';return;}
     videos=await loadVids(CU.kelas);
     idx=CU.lastVideoIdx||0;
+    show('app');
     buildFeed();
     buildInfo();
     renderLB();
@@ -411,10 +412,14 @@ async function loadVids(kelas){
 }
 
 /* ── BUILD FEED ── */
+function getFeedH(){
+  const fp=document.getElementById('feedPage');
+  return fp.clientHeight || (window.innerHeight-60);
+}
+
 function buildFeed(){
   const slider=document.getElementById('slider');
-  const fp=document.getElementById('feedPage');
-  const H=fp.clientHeight;
+  const H=getFeedH();
   slider.innerHTML='';
   if(!videos.length){
     slider.innerHTML=`<div style="height:${H}px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:36px;text-align:center;"><div style="font-size:60px">🎬</div><div style="font-family:Syne,sans-serif;font-size:19px;font-weight:800;">Belum Ada Video</div></div>`;
@@ -434,7 +439,6 @@ function buildFeed(){
   });
   goTo(idx,false);
   initSwipe();
-  show('app');
 }
 
 function loadNearby(i){
@@ -443,7 +447,7 @@ function loadNearby(i){
     const s=document.getElementById('slide_'+n);
     if(!s||s.querySelector('iframe'))return;
     const v=videos[n];
-    s.innerHTML=`<iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope" allowfullscreen></iframe><div class="slide-overlay"></div>`;
+    s.innerHTML=`<iframe src="https://www.youtube.com/embed/${v.youtubeId}?rel=0&modestbranding=1&playsinline=1" allow="accelerometer;autoplay;clipboard-write;encrypted-media;gyroscope;picture-in-picture" allowfullscreen playsinline></iframe><div class="slide-overlay"></div>`;
   });
   videos.forEach((_,n)=>{
     if(Math.abs(n-i)>2){
@@ -457,14 +461,26 @@ function loadNearby(i){
 
 function goTo(i,anim=true){
   idx=i;
-  const fp=document.getElementById('feedPage');
-  const H=fp.clientHeight;
+  const H=getFeedH();
   const slider=document.getElementById('slider');
   slider.style.transition=anim?'transform .38s cubic-bezier(.25,.46,.45,.94)':'none';
   slider.style.transform=`translateY(${-i*H}px)`;
   loadNearby(i);
   updateFeedUI();
 }
+
+let _rszTmr=null;
+window.addEventListener('resize',()=>{
+  clearTimeout(_rszTmr);
+  _rszTmr=setTimeout(()=>{
+    if(!videos.length)return;
+    const H=getFeedH();
+    document.querySelectorAll('#slider .slide').forEach(s=>s.style.height=H+'px');
+    const slider=document.getElementById('slider');
+    slider.style.transition='none';
+    slider.style.transform=`translateY(${-idx*H}px)`;
+  },150);
+});
 
    function updateFeedUI(){
   if(!videos.length)return;
