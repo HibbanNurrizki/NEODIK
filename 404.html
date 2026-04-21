@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<script>
+  const path = window.location.pathname;
+  if (!path.includes('guru.html')) {
+    const base = path.split('/').slice(0, -1).join('/');
+    window.location.replace(window.location.origin + base + '/index.html');
+  }
+</script>
+</head>
+<body></body>
+</html>
