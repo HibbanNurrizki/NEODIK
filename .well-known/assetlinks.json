@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.neodik.app",
+        "sha256_cert_fingerprints": ["A4:6E:B7:11:D8:CE:A5:B5:AE:65:2C:4A:C4:51:CB:69:67:B3:0A:D6:C9:24:7C:2B:EF:1E:E1:73:B8:DF:8D:03"]
+      }
+    }]
